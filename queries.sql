@@ -24,9 +24,9 @@
 SELECT *
 FROM routes
 JOIN airports AS origin
-  ON routes.origin_code = origin.iata_faa
+  ON routes.origin_code = origin.iata_faa     -- Only list flights where origins = codes
 JOIN airports AS destination
-  ON routes.dest_code = destination.iata_faa
+  ON routes.dest_code = destination.iata_faa  -- Only list flights where destination = codes
 
 -- PARSE SO THAT ONLY NYC IS ORIGIN AND PARIS IS DEST
 SELECT *
@@ -49,13 +49,25 @@ WHERE origin.city = 'New York'
   AND destination.city = 'Paris';
 
 -- List out the airlines
-SELECT DISTINCT airline.name
-FROM airlines
-JOIN routes
-  ON airlines.id = routes.airline_id
+SELECT DISTINCT airlines.name             -- NEW
+FROM airlines                             -- NEW
+JOIN routes                               -- EDITED
+  ON airlines.id = routes.airline_id      -- EDITED
 JOIN airports AS origin
   ON routes.origin_code = origin.iata_faa
 JOIN airports AS destination
   ON routes.dest_code = destination.iata_faa
 WHERE origin.city = 'New York'
   AND destination.city = 'Paris';
+
+-- Count of total flights arriving at each airport that came from NYC
+SELECT destination.city AS landing_city,
+       COUNT(destination.name) AS total_flights
+FROM routes
+JOIN airports AS origin
+  ON routes.origin_code = origin.iata_faa
+JOIN airports AS destination
+  on routes.dest_code = destination.iata_faa
+WHERE origin.city = 'New York'
+GROUP BY destination.city   -- Sort by dest City
+ORDER BY total_flights DESC; -- Ordered by Flight Count
