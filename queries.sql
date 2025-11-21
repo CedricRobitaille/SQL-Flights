@@ -39,13 +39,23 @@ WHERE origin.city = 'New York'       -- NEW
   AND destination.city = 'Paris';    -- NEW
 
 -- COUNT THE FLIGHTS
-SELECT COUNT(*)     -- NEW
+SELECT COUNT(*)   -- NEW
 FROM routes
 JOIN airports AS origin
   ON routes.origin_code = origin.iata_faa
 JOIN airports AS destination
   ON routes.dest_code = destination.iata_faa
-WHERE origin.city = 'New York'       -- NEW
-  AND destination.city = 'Paris';    -- NEW
+WHERE origin.city = 'New York'
+  AND destination.city = 'Paris';
 
--- 
+-- List out the airlines
+SELECT DISTINCT airline.name
+FROM airlines
+JOIN routes
+  ON airlines.id = routes.airline_id
+JOIN airports AS origin
+  ON routes.origin_code = origin.iata_faa
+JOIN airports AS destination
+  ON routes.dest_code = destination.iata_faa
+WHERE origin.city = 'New York'
+  AND destination.city = 'Paris';
